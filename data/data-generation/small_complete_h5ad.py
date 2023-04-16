@@ -4,7 +4,7 @@ import anndata as ad
 from scipy.sparse import csr_matrix
 
 
-def generate(num_cells = 100, num_genes = 20000):
+def generate(dst, num_cells = 100, num_genes = 20000):
 
     counts = csr_matrix(np.random.poisson(1, size=(num_genes, num_cells)), dtype=np.float32)
     adata = ad.AnnData(counts)
@@ -13,7 +13,7 @@ def generate(num_cells = 100, num_genes = 20000):
 
     cell_types = np.random.choice(["B", "T", "Monocyte"], size=(adata.n_obs,))
     adata.obs["cell_type"] = pd.Categorical(cell_types)
-
+    adata.write(dst)
 
 
 
