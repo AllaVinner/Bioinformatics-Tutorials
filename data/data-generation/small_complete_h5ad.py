@@ -18,5 +18,3 @@ def generate(dst, num_cells = 100, num_genes = 20000):
 
 
 
-
-
