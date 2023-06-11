@@ -1,4 +1,7 @@
-
+BiocManager::install('GenomicFeatures')
+BiocManager::install('AnnotationHub')
+BiocManager::install('GenomicRanges')
+install.packages('purrr')
 library(AnnotationHub)
 BiocManager::install('BSgenome.Hsapiens.UCSC.hg19')
 library(BSgenome.Hsapiens.UCSC.hg19)
