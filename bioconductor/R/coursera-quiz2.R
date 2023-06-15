@@ -128,4 +128,84 @@ matches %>% map_dbl(length) %>% sum()
 
 
 
+###############
+# Q9 139 WRONG
+###############
+
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+
+txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
+trans <-keepSeqlevels(transcripts(txdb), 'chr22', pruning.mode = 'coarse')
+proms <- promoters(trans, upstream=900, downstream=100)
+cdseq <-keepSeqlevels(cds(txdb), 'chr22', pruning.mode = 'coarse')
+
+ct <- subsetByOverlaps(proms, cdseq)
+ct
+
+
+ct_dna <- Views(hg, ct)
+ct_dnas <- as(ct_dna, 'DNAStringSet')
+
+matches <- vmatchPattern('TATAAA', ct_dnas)
+
+match_size <- map(matches, length)
+match_size %>% keep(~.x >0) %>% length()
+
+###########################################################
+
+txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
+trans <-keepSeqlevels(transcripts(txdb), 'chr22', pruning.mode = 'coarse')
+cdseq <-keepSeqlevels(cds(txdb), 'chr22', pruning.mode = 'coarse')
+ct <- subsetByOverlaps(trans, cdseq)
+proms <- promoters(ct, upstream=900, downstream=100)
+
+promplus <- proms[1:794]
+promminus <- proms[795:length(proms)]
+
+ct <- subsetByOverlaps(proms, cdseq)
+ct
+
+
+dnaa <- Views(hg, proms)
+dnab <- as(dnaa, 'DNAStringSet')
+matches <- vmatchPattern('TATAAA', dnab)
+
+plus_dna <- Views(hg, promplus)
+minus_dna <- Views(hg, promminus)
+
+plus_dnas <- as(proms, 'DNAStringSet')
+
+matches <- vmatchPattern('TATAAA', plus_dnas)
+
+match_size <- map(matches, length)
+match_size %>% keep(~.x >0) %>% length()
+
+
+
+#############################
+# Q10 (30 000 something, did not get it correct)
+##############################
+
+txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
+trans <-keepSeqlevels(transcripts(txdb), 'chr22', pruning.mode = 'coarse')
+cdseq <-keepSeqlevels(cds(txdb), 'chr22', pruning.mode = 'coarse')
+ct <- subsetByOverlaps(trans, cdseq)
+proms <- promoters(ct, upstream=900, downstream=100)
+
+ov <- findOverlaps(proms, proms)
+
+for (i in seq_along(ov)){
+  q <- queryHits(ov)[[i]]
+  s <- subjectHits(ov)[[i]]
+  if (q == s) {
+
+  }
+  lll <- subsetByOverlaps(proms[q], proms[s])
+  print(lll)
+}
+
+tibble(a = queryHits(findOverlaps(proms, proms)) ) %>% group_by(a) %>% count() %>% pull(n) %>% sum()
+length(a)
+
+
 
